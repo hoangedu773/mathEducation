@@ -2,6 +2,8 @@ import { getTodayLesson, getTheoryContent } from "@/lib/data";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 import Link from "next/link";
 
+export const revalidate = 86400;
+
 export default function HomePage() {
   const lesson = getTodayLesson();
 
