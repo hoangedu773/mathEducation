@@ -1,14 +1,47 @@
-export default function Home() {
+import { getTodayLesson, getTheoryContent } from "@/lib/data";
+import MarkdownRenderer from "@/components/MarkdownRenderer";
+import Link from "next/link";
+
+export default function HomePage() {
+  const lesson = getTodayLesson();
+
   return (
-    <main className="flex min-h-screen items-center justify-center p-4">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-[var(--color-primary)]">
-          🧮 Web Học Toán 9
-        </h1>
-        <p className="mt-2 text-[var(--color-text-secondary)]">
-          Dự án đã khởi tạo thành công. Sẵn sàng cho Phase 2.
-        </p>
-      </div>
-    </main>
+    <div className="space-y-6">
+      {lesson ? (
+        <>
+          <div className="text-center">
+            <p className="text-sm text-[var(--color-text-secondary)]">
+              📅 {new Date(lesson.date).toLocaleDateString("vi-VN", { weekday: "long", day: "numeric", month: "numeric", year: "numeric" })}
+            </p>
+            <h1 className="mt-1 text-xl font-bold">
+              Chương {lesson.chuong}: {lesson.tenBai}
+            </h1>
+          </div>
+
+          <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
+            <MarkdownRenderer content={getTheoryContent(lesson.date) || ""} />
+          </div>
+
+          <Link
+            href={`/quiz/${lesson.date}`}
+            className="block rounded-xl bg-[var(--color-primary)] py-4 text-center text-base font-bold text-white transition-all hover:brightness-110"
+          >
+            ▶ Làm bài tập · {lesson.soCau} câu · {lesson.thoiGian} phút
+          </Link>
+
+          <Link
+            href="/ranking"
+            className="block rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] py-3 text-center text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-border)]"
+          >
+            📊 Xem bảng xếp hạng
+          </Link>
+        </>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-20 text-[var(--color-text-secondary)]">
+          <span className="text-4xl">📭</span>
+          <p className="mt-2">Chưa có bài học cho hôm nay</p>
+        </div>
+      )}
+    </div>
   );
 }
