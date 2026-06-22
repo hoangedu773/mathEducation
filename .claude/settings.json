@@ -1,0 +1,45 @@
+{
+  "includeCoAuthoredBy": false,
+  "statusLine": {
+    "type": "command",
+    "command": "node .claude/statusline.js",
+    "padding": 0
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Glob|Grep|Read|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/scout-block.js"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat >/dev/null || true; git rev-parse --git-dir >/dev/null 2>&1 && code-review-graph update --skip-flows --repo \"C:/work-space/mathEducation\" || true",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat >/dev/null || true; git rev-parse --git-dir >/dev/null 2>&1 && code-review-graph status --repo \"C:/work-space/mathEducation\" || echo 'Not a git repo, skipping'",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
