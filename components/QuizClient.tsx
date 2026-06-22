@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { QuizData } from "@/lib/data";
 import { calculateScore } from "@/lib/quiz";
 import { getClientIP, getGeoData } from "@/lib/ip";
 import { checkBannedIP, submitScore, logIP } from "@/lib/supabase-queries";
+import { useAntiCheat } from "@/lib/anti-cheat";
 import ProgressBar from "./ProgressBar";
 import Timer from "./Timer";
 import QuestionDisplay from "./QuestionDisplay";
@@ -69,59 +70,12 @@ export default function QuizClient({ date, quizData, playerNameCookie }: Props) 
   }, [ipChecked, banned]);
 
   // --- anti-cheat ---
-  const [flags, setFlags] = useState<string[]>([]);
-  const tabLeaveCount = useRef(0);
-  const mouseLeaveTotal = useRef(0);
-  const mouseLeaveStart = useRef<number>(0);
-  const cheatLocked = useRef(false);
-
-  const addFlag = useCallback((flag: string) => {
-    if (cheatLocked.current) return;
-    setFlags((prev) => (prev.includes(flag) ? prev : [...prev, flag]));
-  }, []);
-
-  useEffect(() => {
-    if (submitted) return;
-    function onVisChange() {
-      if (document.visibilityState === "hidden") {
-        tabLeaveCount.current++;
-        if (tabLeaveCount.current > 2) addFlag("tab_leave");
-      }
-    }
-    function onCopy() { addFlag("copy_paste"); }
-    function onPaste() { addFlag("copy_paste"); }
-    function onContext(e: Event) { e.preventDefault(); addFlag("copy_paste"); }
-    function onMouseLeave() { mouseLeaveStart.current = Date.now(); }
-    function onMouseEnter() {
-      if (mouseLeaveStart.current) {
-        mouseLeaveTotal.current += Date.now() - mouseLeaveStart.current;
-        if (mouseLeaveTotal.current > 10_000) addFlag("mouse_leave");
-        mouseLeaveStart.current = 0;
-      }
-    }
-
-    document.addEventListener("visibilitychange", onVisChange);
-    document.addEventListener("copy", onCopy);
-    document.addEventListener("paste", onPaste);
-    document.addEventListener("contextmenu", onContext);
-    document.addEventListener("mouseleave", onMouseLeave);
-    document.addEventListener("mouseenter", onMouseEnter);
-
-    return () => {
-      document.removeEventListener("visibilitychange", onVisChange);
-      document.removeEventListener("copy", onCopy);
-      document.removeEventListener("paste", onPaste);
-      document.removeEventListener("contextmenu", onContext);
-      document.removeEventListener("mouseleave", onMouseLeave);
-      document.removeEventListener("mouseenter", onMouseEnter);
-    };
-  }, [submitted, addFlag]);
+  const { flags, lock } = useAntiCheat(submitted);
 
   // --- submit ---
   async function handleSubmit() {
-    cheatLocked.current = true;
+    const finalFlags = lock();
     const duration = Date.now() - startTime;
-    const finalFlags = [...flags];
     if (duration < 60_000) finalFlags.push("fast_submit");
 
     const correctAnswers = quizData.cauHoi.map((q) => q.dung);
@@ -162,7 +116,7 @@ export default function QuizClient({ date, quizData, playerNameCookie }: Props) 
   // --- edge cases ---
   if (banned) return <BannedOverlay />;
 
-  if (!ipChecked) {
+  if (!ipChecked || !quizData) {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--color-border)] border-t-[var(--color-primary)]" />
@@ -200,10 +154,6 @@ export default function QuizClient({ date, quizData, playerNameCookie }: Props) 
             setStartTime(Date.now());
             setSubmitted(false);
             setResult(null);
-            setFlags([]);
-            cheatLocked.current = false;
-            tabLeaveCount.current = 0;
-            mouseLeaveTotal.current = 0;
           }}
         />
       )}
