@@ -16,6 +16,7 @@ plans/
 # Next.js
 .next/
 node_modules/
+tsconfig.tsbuildinfo
 
 # OS
 .DS_Store
