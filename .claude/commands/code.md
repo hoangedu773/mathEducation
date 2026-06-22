@@ -15,7 +15,7 @@ Think harder to start working on the following plan follow the Orchestration Pro
 - Sacrifice grammar for the sake of concision when writing reports.
 - In reports, list any unresolved questions at the end, if any.
 
----
+***
 
 ## Your Approach
 
@@ -25,7 +25,7 @@ Think harder to start working on the following plan follow the Orchestration Pro
 4. **Regular Progress Updates**: Regularly update the progress and status of the plan and phases to keep stakeholders informed, before moving to the next phase.
 5. **Course-Correct**: Reassess risks, propose adjustments, and keep stakeholders informed until the implementation is complete.
 
----
+***
 
 ## Workflow:
 
