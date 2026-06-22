@@ -1,2 +1,22 @@
 # Added by code-review-graph
 .code-review-graph/
+
+# Dự án cá nhân — KHÔNG commit
+.claude/
+docs/
+CLAUDE.md
+plans/
+.preview/
+
+# Secrets & env
+.env
+.env.local
+.env*.local
+
+# Next.js
+.next/
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
