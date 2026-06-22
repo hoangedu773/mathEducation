@@ -1,0 +1,35 @@
+{
+  "thoiGian": 15,
+  "cauHoi": [
+    {
+      "cau": "Căn bậc hai số học của $9$ là:",
+      "dapAn": ["$3$", "$-3$", "$\\pm 3$", "$81$"],
+      "dung": 0,
+      "giaiThich": "Căn bậc hai số học của 9 là 3, vì $3^2 = 9$ và $3 > 0$."
+    },
+    {
+      "cau": "Giá trị của $\\sqrt{(-5)^2}$ là:",
+      "dapAn": ["$-5$", "$5$", "$\\pm 5$", "$25$"],
+      "dung": 1,
+      "giaiThich": "$\\sqrt{(-5)^2} = |-5| = 5$"
+    },
+    {
+      "cau": "Kết quả của $\\sqrt{16} + \\sqrt{9}$ là:",
+      "dapAn": ["$5$", "$25$", "$7$", "$12$"],
+      "dung": 2,
+      "giaiThich": "$\\sqrt{16} = 4$, $\\sqrt{9} = 3$, tổng là $7$."
+    },
+    {
+      "cau": "Điều kiện xác định của $\\sqrt{x - 3}$ là:",
+      "dapAn": ["$x > 3$", "$x < 3$", "$x \\ge 3$", "$x \\le 3$"],
+      "dung": 2,
+      "giaiThich": "Biểu thức dưới căn phải không âm: $x - 3 \\ge 0 \\Rightarrow x \\ge 3$."
+    },
+    {
+      "cau": "So sánh: $\\sqrt{2}$ và $1.5$. Kết quả nào đúng?",
+      "dapAn": ["$\\sqrt{2} > 1.5$", "$\\sqrt{2} < 1.5$", "$\\sqrt{2} = 1.5$", "Không so sánh được"],
+      "dung": 1,
+      "giaiThich": "$\\sqrt{2} \\approx 1.414 < 1.5$, nên $\\sqrt{2} < 1.5$."
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "thoiGian": 15,
+  "cauHoi": [
+    {
+      "cau": "Nghiệm của hệ $\\begin{cases} 2x + y = 5 \\\\ x - y = 1 \\end{cases}$ là:",
+      "dapAn": ["$(2, 1)$", "$(1, 2)$", "$(3, -1)$", "$(-1, 3)$"],
+      "dung": 0,
+      "giaiThich": "Từ $x - y = 1 \\Rightarrow y = x - 1$. Thay vào $2x + (x - 1) = 5 \\Rightarrow 3x = 6 \\Rightarrow x = 2, y = 1$."
+    },
+    {
+      "cau": "Hệ $\\begin{cases} x + y = 3 \\\\ 2x + 2y = 6 \\end{cases}$ có:",
+      "dapAn": ["Vô nghiệm", "1 nghiệm duy nhất", "Vô số nghiệm", "2 nghiệm"],
+      "dung": 2,
+      "giaiThich": "Phương trình thứ hai bằng 2 lần phương trình đầu, nên hai đường thẳng trùng nhau → vô số nghiệm."
+    },
+    {
+      "cau": "Hệ $\\begin{cases} x + y = 2 \\\\ x + y = 5 \\end{cases}$ có:",
+      "dapAn": ["Vô nghiệm", "1 nghiệm duy nhất", "Vô số nghiệm", "$x = 2, y = 3$"],
+      "dung": 0,
+      "giaiThich": "Hai đường thẳng song song (cùng hệ số nhưng khác hằng số) nên hệ vô nghiệm."
+    },
+    {
+      "cau": "Tìm hai số biết tổng bằng $14$ và hiệu bằng $4$. Hai số đó là:",
+      "dapAn": ["$9$ và $5$", "$10$ và $4$", "$8$ và $6$", "$11$ và $3$"],
+      "dung": 0,
+      "giaiThich": "Gọi $x, y$ là hai số. Ta có $x + y = 14$ và $x - y = 4$. Cộng hai phương trình: $2x = 18 \\Rightarrow x = 9$, suy ra $y = 5$."
+    },
+    {
+      "cau": "Giá trị của $m$ để hệ $\\begin{cases} 2x + y = 1 \\\\ 4x + my = 2 \\end{cases}$ có vô số nghiệm là:",
+      "dapAn": ["$m = 1$", "$m = 2$", "$m = 4$", "$m = -2$"],
+      "dung": 1,
+      "giaiThich": "Để vô số nghiệm, hai phương trình phải tỉ lệ: $\\frac{2}{4} = \\frac{1}{m} = \\frac{1}{2}$. Từ $\\frac{1}{m} = \\frac{1}{2} \\Rightarrow m = 2$."
+    }
+  ]
+}
