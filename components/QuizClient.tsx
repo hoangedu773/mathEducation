@@ -136,6 +136,35 @@ export default function QuizClient({ date, quizData, playerNameCookie }: Props) 
     setAnswers(next);
   }
 
+  // --- keyboard shortcuts ---
+  useEffect(() => {
+    if (showNameInput || result || submitted) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      const key = e.key.toLowerCase();
+      if (key === "1" || key === "a") selectOption(0);
+      else if (key === "2" || key === "b") selectOption(1);
+      else if (key === "3" || key === "c") selectOption(2);
+      else if (key === "4" || key === "d") selectOption(3);
+      else if (key === "arrowleft" || key === "arrowup") { if (currentIdx > 0) setCurrentIdx((i) => i - 1); }
+      else if (key === "arrowright" || key === "arrowdown") { if (currentIdx < totalQuestions - 1) setCurrentIdx((i) => i + 1); }
+      else if (key === "enter") {
+        if (isLast && allAnswered) handleSubmit();
+        else if (currentIdx < totalQuestions - 1) setCurrentIdx((i) => i + 1);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [showNameInput, result, submitted, currentIdx, answers, isLast, allAnswered, totalQuestions]);
+
+  // escape key for modal
+  useEffect(() => {
+    if (!result) return;
+    function onKey(e: KeyboardEvent) { if (e.key === "Escape") { setResult(null); setSubmitted(false); } }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [result]);
+
   return (
     <>
       {showNameInput && <NameInput onSave={handleSaveName} />}
