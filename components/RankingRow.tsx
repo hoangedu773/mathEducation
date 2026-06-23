@@ -1,12 +1,13 @@
 import { formatDuration } from "@/lib/quiz";
-import { Crown, Medal } from "lucide-react";
+import { Crown, Medal, Flag } from "lucide-react";
 
 interface Props {
   rank: number;
   name: string;
   score: number;
   duration: number;
-  city: string | null;
+  flags?: number;
+  quizDate?: string;
   isCurrentUser?: boolean;
   medal?: "gold" | "silver" | "bronze";
 }
@@ -17,7 +18,7 @@ const medalColors = {
   bronze: "text-amber-700",
 };
 
-export default function RankingRow({ rank, name, score, duration, city, isCurrentUser, medal }: Props) {
+export default function RankingRow({ rank, name, score, duration, flags, quizDate, isCurrentUser, medal }: Props) {
   return (
     <tr
       className={`border-b border-[var(--color-border)] transition-colors ${
@@ -43,8 +44,18 @@ export default function RankingRow({ rank, name, score, duration, city, isCurren
       <td className="px-3 py-3 text-right font-mono text-xs text-[var(--color-text-secondary)]">
         {formatDuration(duration)}
       </td>
+      <td className="px-3 py-3 text-center">
+        {flags && flags > 0 ? (
+          <span className="inline-flex items-center gap-1 text-xs text-[var(--color-warning)]" title={`${flags} cảnh báo`}>
+            <Flag size={12} />
+            {flags}
+          </span>
+        ) : (
+          <span className="text-xs text-[var(--color-text-secondary)]">—</span>
+        )}
+      </td>
       <td className="px-3 py-3 text-xs text-[var(--color-text-secondary)] hidden sm:table-cell">
-        {city || "—"}
+        {quizDate ? new Date(quizDate).toLocaleDateString("vi-VN") : "—"}
       </td>
     </tr>
   );

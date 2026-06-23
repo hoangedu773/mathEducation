@@ -26,8 +26,7 @@ export interface RankingRow {
   player_name: string;
   score: number;
   duration: number;
-  city: string | null;
-  country: string | null;
+  flags: number | null;
   quiz_date: string;
 }
 
@@ -90,7 +89,7 @@ export async function getRanking(filter: "today" | "week" | "month" | "all"): Pr
 
   let query = client
     .from("scores")
-    .select("id, player_name, score, duration, city, country, quiz_date")
+    .select("id, player_name, score, duration, quiz_date, flags")
     .order("score", { ascending: false })
     .order("duration", { ascending: true })
     .limit(100);
