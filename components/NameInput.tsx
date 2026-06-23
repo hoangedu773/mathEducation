@@ -41,7 +41,7 @@ export default function NameInput({ onSave, initial }: Props) {
           }}
           placeholder="Nhập tên (2-30 ký tự)"
           maxLength={30}
-          className="mt-4 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-3 text-sm outline-none transition-colors focus:border-[var(--color-primary)]"
+          className="mt-4 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-3 text-sm outline-none transition-colors focus:border-[var(--color-primary)]"
           autoFocus
         />
         {error && <p className="mt-2 text-sm text-[var(--color-danger)]">{error}</p>}

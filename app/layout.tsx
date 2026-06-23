@@ -25,15 +25,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                     document.documentElement.classList.add('dark');
                   }
+                  document.documentElement.classList.add('theme-ready');
                 } catch(e) {}
               })();
             `,
           }}
         />
       </head>
-      <body className={`${inter.className} min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)]`}>
+      <body className={`${inter.className} min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]`}>
+        <a href="#main-content" className="skip-to-content">
+          Bỏ qua điều hướng
+        </a>
         <Header />
-        <main className="mx-auto max-w-4xl px-4 pt-20 pb-8">{children}</main>
+        <main id="main-content" className="mx-auto max-w-4xl px-4 pt-20 pb-8">{children}</main>
       </body>
     </html>
   );

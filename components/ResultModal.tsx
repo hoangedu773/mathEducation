@@ -33,7 +33,7 @@ export default function ResultModal({ score, total, duration, flags, onClose, on
             <span className={`text-2xl font-bold ${
               isPerfect ? "text-[var(--color-warning)]" :
               isGood ? "text-[var(--color-success)]" :
-              "text-[var(--color-text-primary)]"
+              "text-[var(--color-text)]"
             }`}>
               {score}/{total}
             </span>

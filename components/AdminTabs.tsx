@@ -20,8 +20,8 @@ export default function AdminTabs({ active, onChange }: Props) {
           onClick={() => onChange(key)}
           className={`flex-1 rounded-lg px-3 py-1.5 text-sm font-medium transition-all ${
             active === key
-              ? "bg-[var(--color-surface)] text-[var(--color-text-primary)] shadow-sm"
-              : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
+              ? "bg-[var(--color-surface)] text-[var(--color-text)] shadow-sm"
+              : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
           }`}
         >
           {label}

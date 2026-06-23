@@ -2,7 +2,7 @@ import { ShieldBan } from "lucide-react";
 
 export default function BannedOverlay() {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-background)] p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-bg)] p-4">
       <div className="text-center">
         <ShieldBan size={56} className="mx-auto text-[var(--color-danger)]" strokeWidth={1.5} />
         <h1 className="mt-4 text-xl font-bold text-[var(--color-danger)]">

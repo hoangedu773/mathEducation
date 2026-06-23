@@ -36,7 +36,7 @@ export default function IPLogTable({ logs, onBan }: Props) {
         placeholder="Tìm IP hoặc tên..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
+        className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
       />
       <div className="max-h-96 overflow-y-auto rounded-xl border border-[var(--color-border)]">
         <table className="w-full text-xs">

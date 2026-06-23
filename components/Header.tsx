@@ -37,7 +37,7 @@ export default function Header() {
           </Link>
           {playerName && (
             <span className="hidden sm:flex items-center gap-1 text-sm text-[var(--color-text-secondary)]">
-              <span>👋 Xin chào, <span className="font-medium text-[var(--color-text-primary)]">{playerName}</span>!</span>
+              <span>👋 Xin chào, <span className="font-medium text-[var(--color-text)]">{playerName}</span>!</span>
               <button
                 onClick={handleRename}
                 className="ml-1 text-xs text-[var(--color-primary)] hover:underline"
