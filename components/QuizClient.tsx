@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { QuizData } from "@/lib/data";
 import { calculateScore } from "@/lib/quiz";
 import { getClientIP, getGeoData } from "@/lib/ip";
 import { checkBannedIP, submitScore, logIP } from "@/lib/supabase-queries";
 import { useAntiCheat } from "@/lib/anti-cheat";
+import { collectTrackingData } from "@/lib/device";
 import ProgressBar from "./ProgressBar";
 import Timer from "./Timer";
 import QuestionDisplay from "./QuestionDisplay";
@@ -64,9 +65,14 @@ export default function QuizClient({ date, quizData, playerNameCookie }: Props) 
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ score: number; duration: number; flags: string[] } | null>(null);
 
+  const questionStartRef = useRef(Date.now());
+  const questionTimesRef = useRef<number[]>([]);
+
   useEffect(() => {
     if (ipChecked && !banned) {
-      setStartTime(Date.now());
+      const now = Date.now();
+      setStartTime(now);
+      questionStartRef.current = now;
     }
   }, [ipChecked, banned]);
 
@@ -83,6 +89,18 @@ export default function QuizClient({ date, quizData, playerNameCookie }: Props) 
     const correctAnswers = quizData.cauHoi.map((q) => q.dung);
     const score = calculateScore(answers, correctAnswers);
 
+    // build answers detail
+    const answersDetail = answers.map((a, i) => ({
+      cau: i,
+      chon: a,
+      dung: a === correctAnswers[i],
+    }));
+
+    // record time for last question
+    questionTimesRef.current[currentIdx] = Math.round((Date.now() - questionStartRef.current) / 1000);
+
+    const tracking = collectTrackingData();
+
     const geo = await getGeoData(clientIP);
     const vnNow = new Date(Date.now() + 7 * 60 * 60 * 1000);
     const vnDate = vnNow.toISOString().slice(0, 10);
@@ -98,6 +116,13 @@ export default function QuizClient({ date, quizData, playerNameCookie }: Props) 
       lat: geo.lat,
       lon: geo.lon,
       flags: finalFlags,
+      device: tracking.device,
+      browser: tracking.browser,
+      screen_size: tracking.screen_size,
+      language: tracking.language,
+      answers: answersDetail,
+      question_times: questionTimesRef.current,
+      referrer: tracking.referrer,
     });
 
     await logIP({
@@ -136,6 +161,12 @@ export default function QuizClient({ date, quizData, playerNameCookie }: Props) 
     setAnswers(next);
   }
 
+  function moveToQuestion(newIdx: number) {
+    questionTimesRef.current[currentIdx] = Math.round((Date.now() - questionStartRef.current) / 1000);
+    setCurrentIdx(newIdx);
+    questionStartRef.current = Date.now();
+  }
+
   // --- keyboard shortcuts ---
   useEffect(() => {
     if (showNameInput || result || submitted) return;
@@ -146,11 +177,11 @@ export default function QuizClient({ date, quizData, playerNameCookie }: Props) 
       else if (key === "2" || key === "b") selectOption(1);
       else if (key === "3" || key === "c") selectOption(2);
       else if (key === "4" || key === "d") selectOption(3);
-      else if (key === "arrowleft" || key === "arrowup") { if (currentIdx > 0) setCurrentIdx((i) => i - 1); }
-      else if (key === "arrowright" || key === "arrowdown") { if (currentIdx < totalQuestions - 1) setCurrentIdx((i) => i + 1); }
+      else if (key === "arrowleft" || key === "arrowup") { if (currentIdx > 0) moveToQuestion(currentIdx - 1); }
+      else if (key === "arrowright" || key === "arrowdown") { if (currentIdx < totalQuestions - 1) moveToQuestion(currentIdx + 1); }
       else if (key === "enter") {
         if (isLast && allAnswered) handleSubmit();
-        else if (currentIdx < totalQuestions - 1) setCurrentIdx((i) => i + 1);
+        else if (currentIdx < totalQuestions - 1) moveToQuestion(currentIdx + 1);
       }
     }
     window.addEventListener("keydown", onKey);
@@ -185,6 +216,8 @@ export default function QuizClient({ date, quizData, playerNameCookie }: Props) 
             setStartTime(Date.now());
             setSubmitted(false);
             setResult(null);
+            questionTimesRef.current = [];
+            questionStartRef.current = Date.now();
           }}
         />
       )}
@@ -204,8 +237,8 @@ export default function QuizClient({ date, quizData, playerNameCookie }: Props) 
         />
 
         <QuizNavigation
-          onPrev={() => setCurrentIdx((i) => i - 1)}
-          onNext={() => setCurrentIdx((i) => i + 1)}
+          onPrev={() => moveToQuestion(currentIdx - 1)}
+          onNext={() => moveToQuestion(currentIdx + 1)}
           canGoPrev={currentIdx > 0}
           canGoNext={currentIdx < totalQuestions - 1}
           isLast={isLast}

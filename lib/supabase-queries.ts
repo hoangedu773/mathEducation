@@ -19,6 +19,13 @@ export interface ScoreEntry {
   lat: number | null;
   lon: number | null;
   flags: string[];
+  device?: string;
+  browser?: string;
+  screen_size?: string;
+  language?: string;
+  answers?: { cau: number; chon: number | null; dung: boolean }[];
+  question_times?: number[];
+  referrer?: string;
 }
 
 export interface RankingRow {
@@ -59,6 +66,13 @@ export async function submitScore(entry: ScoreEntry): Promise<boolean> {
     lat: entry.lat,
     lon: entry.lon,
     flags: entry.flags,
+    device: entry.device || null,
+    browser: entry.browser || null,
+    screen_size: entry.screen_size || null,
+    language: entry.language || null,
+    answers: entry.answers || null,
+    question_times: entry.question_times || null,
+    referrer: entry.referrer || null,
   });
   if (error) {
     console.error("submitScore error:", error);
