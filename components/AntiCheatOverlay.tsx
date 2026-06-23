@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { TriangleAlert } from "lucide-react";
 
 interface Props {
   flags: string[];
@@ -34,14 +35,14 @@ export default function AntiCheatOverlay({ flags }: Props) {
 
   return (
     <div className="fixed top-20 left-1/2 z-40 -translate-x-1/2 animate-[shake_0.5s_ease-in-out]">
-      <div className="rounded-xl border-2 border-[var(--color-danger)] bg-[var(--color-danger)]/10 px-5 py-3 text-center shadow-lg backdrop-blur-sm">
-        <p className="text-sm font-bold text-[var(--color-danger)]">⚠ Cảnh báo gian lận</p>
-        <p className="mt-1 text-xs text-[var(--color-text-secondary)]">
-          {FLAG_LABELS[currentFlag] || currentFlag}
-        </p>
-        <p className="mt-1 text-xs text-[var(--color-text-secondary)]">
-          Hành vi này đã được ghi nhận
-        </p>
+      <div className="flex items-center gap-2 rounded-xl border-2 border-[var(--color-danger)] bg-[var(--color-danger)]/10 px-5 py-3 shadow-lg backdrop-blur-sm">
+        <TriangleAlert size={18} className="shrink-0 text-[var(--color-danger)]" />
+        <div>
+          <p className="text-sm font-bold text-[var(--color-danger)]">Cảnh báo gian lận</p>
+          <p className="text-xs text-[var(--color-text-secondary)]">
+            {FLAG_LABELS[currentFlag] || currentFlag} — đã được ghi nhận
+          </p>
+        </div>
       </div>
     </div>
   );

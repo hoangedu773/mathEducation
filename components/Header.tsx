@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Calculator } from "lucide-react";
 import DarkModeToggle from "./DarkModeToggle";
 
 const NAV = [
@@ -30,8 +31,9 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-surface)]/90 backdrop-blur-sm">
       <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
         <div className="flex items-center gap-3">
-          <Link href="/" className="shrink-0 text-lg font-bold text-[var(--color-primary)]" onClick={() => setOpen(false)}>
-            🧮 Web Học Toán 9
+          <Link href="/" className="flex items-center gap-2 shrink-0 text-lg font-bold text-[var(--color-primary)]" onClick={() => setOpen(false)}>
+            <Calculator size={24} />
+            Web Học Toán 9
           </Link>
           {playerName && (
             <span className="hidden sm:flex items-center gap-1 text-sm text-[var(--color-text-secondary)]">
@@ -46,7 +48,6 @@ export default function Header() {
           )}
         </div>
 
-        {/* Desktop nav */}
         <nav className="hidden sm:flex items-center gap-1">
           {NAV.map(({ href, label }) => (
             <Link
@@ -64,7 +65,6 @@ export default function Header() {
           <DarkModeToggle />
         </nav>
 
-        {/* Mobile hamburger + dark toggle */}
         <div className="flex items-center gap-2 sm:hidden">
           <DarkModeToggle />
           <button
@@ -77,7 +77,6 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile dropdown */}
       {open && (
         <nav className="border-t border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 sm:hidden">
           {playerName && (

@@ -1,5 +1,7 @@
 "use client";
 
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
 interface Props {
   onPrev: () => void;
   onNext: () => void;
@@ -16,16 +18,17 @@ export default function QuizNavigation({ onPrev, onNext, canGoPrev, canGoNext, i
       <button
         onClick={onPrev}
         disabled={!canGoPrev}
-        className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 text-sm font-medium transition-colors hover:bg-[var(--color-border)] disabled:opacity-30"
+        className="flex items-center gap-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 text-sm font-medium transition-all hover:bg-[var(--color-border)] active:scale-95 disabled:opacity-30"
       >
-        ← Trước
+        <ChevronLeft size={16} />
+        Trước
       </button>
 
       {isLast ? (
         <button
           onClick={onSubmit}
           disabled={!allAnswered}
-          className="rounded-lg bg-[var(--color-success)] px-6 py-2 text-sm font-bold text-white transition-all hover:brightness-110 disabled:opacity-30"
+          className="rounded-lg bg-[var(--color-success)] px-6 py-2 text-sm font-bold text-white transition-all hover:brightness-110 active:scale-95 disabled:opacity-30"
         >
           Nộp bài
         </button>
@@ -33,9 +36,10 @@ export default function QuizNavigation({ onPrev, onNext, canGoPrev, canGoNext, i
         <button
           onClick={onNext}
           disabled={!canGoNext}
-          className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 text-sm font-medium transition-colors hover:bg-[var(--color-border)] disabled:opacity-30"
+          className="flex items-center gap-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 text-sm font-medium transition-all hover:bg-[var(--color-border)] active:scale-95 disabled:opacity-30"
         >
-          Câu sau →
+          Câu sau
+          <ChevronRight size={16} />
         </button>
       )}
     </div>

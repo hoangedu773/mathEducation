@@ -1,6 +1,7 @@
 import { getTodayLesson, getTheoryContent } from "@/lib/data";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 import Link from "next/link";
+import { Calendar, Play, BarChart3, Inbox } from "lucide-react";
 
 export const revalidate = 86400;
 
@@ -12,8 +13,9 @@ export default function HomePage() {
       {lesson ? (
         <>
           <div className="text-center">
-            <p className="text-sm text-[var(--color-text-secondary)]">
-              📅 {new Date(lesson.date).toLocaleDateString("vi-VN", { weekday: "long", day: "numeric", month: "numeric", year: "numeric" })}
+            <p className="flex items-center justify-center gap-1.5 text-sm text-[var(--color-text-secondary)]">
+              <Calendar size={14} />
+              {new Date(lesson.date).toLocaleDateString("vi-VN", { weekday: "long", day: "numeric", month: "numeric", year: "numeric" })}
             </p>
             <h1 className="mt-1 text-xl font-bold">
               Chương {lesson.chuong}: {lesson.tenBai}
@@ -26,21 +28,23 @@ export default function HomePage() {
 
           <Link
             href={`/quiz/${lesson.date}`}
-            className="block rounded-xl bg-[var(--color-primary)] py-4 text-center text-base font-bold text-white transition-all hover:brightness-110"
+            className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] py-4 text-base font-bold text-white transition-all hover:brightness-110 active:scale-[0.98]"
           >
-            ▶ Làm bài tập · {lesson.soCau} câu · {lesson.thoiGian} phút
+            <Play size={18} fill="currentColor" />
+            Làm bài tập · {lesson.soCau} câu · {lesson.thoiGian} phút
           </Link>
 
           <Link
             href="/ranking"
-            className="block rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] py-3 text-center text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-border)]"
+            className="flex items-center justify-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] py-3 text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-border)]"
           >
-            📊 Xem bảng xếp hạng
+            <BarChart3 size={16} />
+            Xem bảng xếp hạng
           </Link>
         </>
       ) : (
         <div className="flex flex-col items-center justify-center py-20 text-[var(--color-text-secondary)]">
-          <span className="text-4xl">📭</span>
+          <Inbox size={48} strokeWidth={1.5} />
           <p className="mt-2">Chưa có bài học cho hôm nay</p>
         </div>
       )}

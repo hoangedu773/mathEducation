@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Clock } from "lucide-react";
 
 export default function Timer({ startTime, timeLimit }: { startTime: number; timeLimit?: number }) {
   const [elapsed, setElapsed] = useState(0);
@@ -24,9 +25,10 @@ export default function Timer({ startTime, timeLimit }: { startTime: number; tim
   const isWarning = timeLimit ? remaining < 60_000 : false;
 
   return (
-    <span className={`font-mono text-sm tabular-nums ${isWarning ? "animate-pulse text-[var(--color-danger)]" : "text-[var(--color-text-secondary)]"}`}>
-      ⏱ {timeStr}
-      {timeLimit && <span className="ml-1 text-xs">/ {timeLimit}:00</span>}
+    <span className={`flex items-center gap-1 font-mono text-sm tabular-nums ${isWarning ? "animate-pulse text-[var(--color-danger)]" : "text-[var(--color-text-secondary)]"}`}>
+      <Clock size={14} />
+      {timeStr}
+      {timeLimit && <span className="text-xs">/ {timeLimit}:00</span>}
     </span>
   );
 }

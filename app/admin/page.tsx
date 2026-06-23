@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { Wrench, LogOut } from "lucide-react";
 import AdminTabs from "@/components/AdminTabs";
 import IPLogTable from "@/components/IPLogTable";
 import BanManager from "@/components/BanManager";
@@ -44,8 +45,7 @@ export default function AdminPage() {
   const fetchBanned = useCallback(async () => {
     const res = await fetch("/api/admin/logs", { headers });
     if (res.ok) {
-      // fetch banned list from supabase directly via api
-      const r2 = await fetch(`https://${process.env.NEXT_PUBLIC_SUPABASE_URL?.replace("https://", "")}/rest/v1/banned_ips?select=*`, {
+      const r2 = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/banned_ips?select=*`, {
         headers: { ...headers, apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "" },
       });
       if (r2.ok) setBanned(await r2.json());
@@ -58,12 +58,9 @@ export default function AdminPage() {
     fetchBanned();
   }, [authed, fetchLogs, fetchBanned]);
 
-  // simpler: use direct supabase queries via fetch
   useEffect(() => {
     if (!authed) return;
-    const interval = setInterval(() => {
-      fetchLogs();
-    }, 30_000);
+    const interval = setInterval(() => fetchLogs(), 30_000);
     return () => clearInterval(interval);
   }, [authed, fetchLogs]);
 
@@ -83,13 +80,8 @@ export default function AdminPage() {
       headers: { ...headers, "Content-Type": "application/json" },
       body: JSON.stringify({ ip, reason }),
     });
-    if (res.ok) {
-      alert("Đã ban IP " + ip);
-      fetchLogs();
-      fetchBanned();
-    } else {
-      alert("Lỗi khi ban");
-    }
+    if (res.ok) { alert("Đã ban IP " + ip); fetchLogs(); fetchBanned(); }
+    else alert("Lỗi khi ban");
   }
 
   async function handleUnban(ip: string) {
@@ -98,19 +90,18 @@ export default function AdminPage() {
       headers: { ...headers, "Content-Type": "application/json" },
       body: JSON.stringify({ ip }),
     });
-    if (res.ok) {
-      alert("Đã unban IP " + ip);
-      fetchBanned();
-    } else {
-      alert("Lỗi khi unban");
-    }
+    if (res.ok) { alert("Đã unban IP " + ip); fetchBanned(); }
+    else alert("Lỗi khi unban");
   }
 
   if (!authed) {
     return (
       <div className="flex items-center justify-center py-20">
         <form onSubmit={handleLogin} className="w-full max-w-xs space-y-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
-          <h1 className="text-lg font-bold text-center">🔧 Admin</h1>
+          <h1 className="flex items-center justify-center gap-2 text-lg font-bold">
+            <Wrench size={20} />
+            Admin
+          </h1>
           <input
             type="password"
             value={secret}
@@ -121,7 +112,7 @@ export default function AdminPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-[var(--color-primary)] py-2 text-sm font-bold text-white transition-all hover:brightness-110 disabled:opacity-50"
+            className="w-full rounded-lg bg-[var(--color-primary)] py-2 text-sm font-bold text-white transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-50"
           >
             {loading ? "Đang kiểm tra..." : "Đăng nhập"}
           </button>
@@ -133,27 +124,24 @@ export default function AdminPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">🔧 Admin Panel</h1>
-        <button onClick={() => { setAuthed(false); setSecret(""); }} className="text-xs text-[var(--color-text-secondary)] hover:underline">
+        <h1 className="flex items-center gap-2 text-xl font-bold">
+          <Wrench size={22} />
+          Admin Panel
+        </h1>
+        <button onClick={() => { setAuthed(false); setSecret(""); }} className="flex items-center gap-1 text-xs text-[var(--color-text-secondary)] hover:underline">
+          <LogOut size={12} />
           Đăng xuất
         </button>
       </div>
 
       <AdminTabs active={tab} onChange={setTab} />
-
       {tab === "log" && <IPLogTable logs={logs} onBan={handleBan} />}
       {tab === "banned" && <BanManager banned={banned} onUnban={handleUnban} />}
       {tab === "map" && (
         <LeafletMap
           markers={logs
             .filter((l) => l.lat && l.lon)
-            .map((l) => ({
-              lat: l.lat!,
-              lon: l.lon!,
-              ip: l.ip_address,
-              city: l.city || undefined,
-              score: l.score || undefined,
-            }))}
+            .map((l) => ({ lat: l.lat!, lon: l.lon!, ip: l.ip_address, city: l.city || undefined, score: l.score || undefined }))}
         />
       )}
     </div>

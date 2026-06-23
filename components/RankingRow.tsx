@@ -1,4 +1,5 @@
 import { formatDuration } from "@/lib/quiz";
+import { Crown, Medal } from "lucide-react";
 
 interface Props {
   rank: number;
@@ -7,8 +8,14 @@ interface Props {
   duration: number;
   city: string | null;
   isCurrentUser?: boolean;
-  medal?: string;
+  medal?: "gold" | "silver" | "bronze";
 }
+
+const medalColors = {
+  gold: "text-amber-500",
+  silver: "text-slate-400",
+  bronze: "text-amber-700",
+};
 
 export default function RankingRow({ rank, name, score, duration, city, isCurrentUser, medal }: Props) {
   return (
@@ -22,7 +29,10 @@ export default function RankingRow({ rank, name, score, duration, city, isCurren
       }`}
     >
       <td className="px-3 py-3 text-center font-mono text-xs text-[var(--color-text-secondary)]">
-        {medal || rank}
+        {medal ? (
+          medal === "gold" ? <Crown size={16} className={`mx-auto ${medalColors.gold}`} /> :
+          <Medal size={16} className={`mx-auto ${medalColors[medal]}`} />
+        ) : rank}
       </td>
       <td className="px-3 py-3">
         <span className="truncate block max-w-32">{name}</span>

@@ -1,4 +1,5 @@
 import type { RankingRow } from "@/lib/supabase-queries";
+import { Crown, Medal, Inbox } from "lucide-react";
 import RankingRowComp from "./RankingRow";
 
 interface Props {
@@ -6,13 +7,11 @@ interface Props {
   currentPlayer?: string;
 }
 
-const MEDALS = ["🥇", "🥈", "🥉"];
-
 export default function RankingTable({ data, currentPlayer }: Props) {
   if (data.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-[var(--color-text-secondary)]">
-        <span className="text-4xl">🏆</span>
+        <Inbox size={48} strokeWidth={1.5} />
         <p className="mt-2">Chưa có ai làm bài</p>
       </div>
     );
@@ -40,7 +39,7 @@ export default function RankingTable({ data, currentPlayer }: Props) {
               duration={row.duration}
               city={row.city}
               isCurrentUser={row.player_name === currentPlayer}
-              medal={i < 3 ? MEDALS[i] : undefined}
+              medal={i < 3 ? (i === 0 ? "gold" : i === 1 ? "silver" : "bronze") : undefined}
             />
           ))}
         </tbody>

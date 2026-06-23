@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { Trophy } from "lucide-react";
 import { getRanking, type RankingRow } from "@/lib/supabase-queries";
 import TimeFilter from "@/components/TimeFilter";
 import RankingTable from "@/components/RankingTable";
@@ -32,7 +33,10 @@ export default function RankingPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-bold">🏆 Bảng xếp hạng</h1>
+      <h1 className="flex items-center gap-2 text-xl font-bold">
+        <Trophy size={24} className="text-[var(--color-warning)]" />
+        Bảng xếp hạng
+      </h1>
       <TimeFilter active={filter} onChange={setFilter} />
       {loading ? (
         <div className="flex items-center justify-center py-16">
