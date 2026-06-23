@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Header from "@/components/Header";
 import ToastContainer from "@/components/Toast";
+import PageTracker from "@/components/PageTracker";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["vietnamese", "latin"] });
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main id="main-content" className="mx-auto max-w-4xl px-4 pt-20 pb-8">{children}</main>
         <ToastContainer />
+        <PageTracker />
       </body>
     </html>
   );
