@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Wrench, LogOut } from "lucide-react";
+import { toast } from "@/lib/toast";
 import AdminTabs from "@/components/AdminTabs";
 import IPLogTable from "@/components/IPLogTable";
 import BanManager from "@/components/BanManager";
@@ -34,6 +35,8 @@ export default function AdminPage() {
   const [secret, setSecret] = useState("");
   const [authed, setAuthed] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [banModal, setBanModal] = useState<{ ip: string } | null>(null);
+  const [banReason, setBanReason] = useState("");
 
   const headers = { "x-admin-key": secret };
 
@@ -69,19 +72,30 @@ export default function AdminPage() {
     setLoading(true);
     const res = await fetch("/api/admin/check", { headers });
     if (res.ok) setAuthed(true);
-    else alert("Sai admin key");
+    else toast.error("Sai admin key");
     setLoading(false);
   }
 
-  async function handleBan(ip: string) {
-    const reason = prompt("Lý do ban IP " + ip + ":");
+  function openBanModal(ip: string) {
+    setBanModal({ ip });
+    setBanReason("");
+  }
+
+  async function handleBan() {
+    if (!banModal) return;
     const res = await fetch("/api/admin/ban", {
       method: "POST",
       headers: { ...headers, "Content-Type": "application/json" },
-      body: JSON.stringify({ ip, reason }),
+      body: JSON.stringify({ ip: banModal.ip, reason: banReason }),
     });
-    if (res.ok) { alert("Đã ban IP " + ip); fetchLogs(); fetchBanned(); }
-    else alert("Lỗi khi ban");
+    if (res.ok) {
+      toast.success("Đã ban IP " + banModal.ip);
+      fetchLogs();
+      fetchBanned();
+    } else {
+      toast.error("Lỗi khi ban IP " + banModal.ip);
+    }
+    setBanModal(null);
   }
 
   async function handleUnban(ip: string) {
@@ -90,8 +104,12 @@ export default function AdminPage() {
       headers: { ...headers, "Content-Type": "application/json" },
       body: JSON.stringify({ ip }),
     });
-    if (res.ok) { alert("Đã unban IP " + ip); fetchBanned(); }
-    else alert("Lỗi khi unban");
+    if (res.ok) {
+      toast.success("Đã unban IP " + ip);
+      fetchBanned();
+    } else {
+      toast.error("Lỗi khi unban IP " + ip);
+    }
   }
 
   if (!authed) {
@@ -135,7 +153,7 @@ export default function AdminPage() {
       </div>
 
       <AdminTabs active={tab} onChange={setTab} />
-      {tab === "log" && <IPLogTable logs={logs} onBan={handleBan} />}
+      {tab === "log" && <IPLogTable logs={logs} onBan={openBanModal} />}
       {tab === "banned" && <BanManager banned={banned} onUnban={handleUnban} />}
       {tab === "map" && (
         <LeafletMap
@@ -143,6 +161,31 @@ export default function AdminPage() {
             .filter((l) => l.lat && l.lon)
             .map((l) => ({ lat: l.lat!, lon: l.lon!, ip: l.ip_address, city: l.city || undefined, score: l.score || undefined }))}
         />
+      )}
+
+      {banModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-sm rounded-xl bg-[var(--color-surface)] p-6 shadow-xl animate-[scaleIn_0.2s_ease-out]">
+            <h3 className="font-bold">Ban IP: {banModal.ip}</h3>
+            <input
+              type="text"
+              value={banReason}
+              onChange={(e) => setBanReason(e.target.value)}
+              placeholder="Lý do ban (tùy chọn)"
+              className="mt-3 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
+              autoFocus
+              onKeyDown={(e) => { if (e.key === "Enter") handleBan(); if (e.key === "Escape") setBanModal(null); }}
+            />
+            <div className="mt-4 flex gap-2">
+              <button onClick={handleBan} className="flex-1 rounded-lg bg-[var(--color-danger)] py-2 text-sm font-bold text-white transition-all hover:brightness-110 active:scale-95">
+                Ban
+              </button>
+              <button onClick={() => setBanModal(null)} className="flex-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] py-2 text-sm transition-all hover:bg-[var(--color-border)] active:scale-95">
+                Hủy
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
