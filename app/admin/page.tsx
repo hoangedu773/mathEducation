@@ -19,6 +19,7 @@ interface IPLog {
   score: number | null;
   action: string;
   created_at: string;
+  tracking?: Record<string, unknown> | null;
 }
 
 interface BannedIP {
