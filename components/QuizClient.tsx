@@ -61,6 +61,7 @@ export default function QuizClient({ date, quizData, playerNameCookie }: Props) 
   const [answers, setAnswers] = useState<(number | null)[]>(() => new Array(totalQuestions).fill(null));
   const [startTime, setStartTime] = useState<number>(0);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ score: number; duration: number; flags: string[] } | null>(null);
 
   useEffect(() => {
@@ -74,6 +75,7 @@ export default function QuizClient({ date, quizData, playerNameCookie }: Props) 
 
   // --- submit ---
   async function handleSubmit() {
+    setSubmitting(true);
     const finalFlags = lock();
     const duration = Date.now() - startTime;
     if (duration < 60_000) finalFlags.push("fast_submit");
@@ -180,6 +182,7 @@ export default function QuizClient({ date, quizData, playerNameCookie }: Props) 
           isLast={isLast}
           onSubmit={handleSubmit}
           allAnswered={allAnswered}
+          submitting={submitting}
         />
       </div>
     </>
